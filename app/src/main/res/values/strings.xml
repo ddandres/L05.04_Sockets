@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">L05.04_Sockets</string>
+    <string name="exchange_images_server">Server</string>
+    <string name="exchange_images_client">Client</string>
+    <string name="exchange_images_address">IP address: %1s</string>
+    <string name="server_address">Server IP address</string>
+    <string name="exchange_images_start">Start receiving images</string>
+    <string name="exchange_images_stop">Stop receiving images</string>
+    <string name="exchange_images_address_hint">The IP to send images to</string>
+    <string name="gallery_button">Select image to be sent</string>
+    <string name="exchange_images_send">Send image</string>
+    <string name="message_server_on">"Server waiting for connections"</string>
+    <string name="message_server_receiving_image">"Connection received, starting to get an incoming image"</string>
+    <string name="message_server_error">"Error while receiving the image, server closed"</string>
+    <string name="message_server_off">"Server closed"</string>
+    <string name="not_connected">"The device is not connected to the network!"</string>
+    <string name="not_data">"You should introduce the IP address of the Server and select and image to transfer"</string>
+    <string name="image_not_sent">"The image could not be sent to the Server"</string>
+    <string name="image_sent">"The image was successfully sent"</string>
+    <string name="sending_image">"Sending image..."</string>
+</resources>

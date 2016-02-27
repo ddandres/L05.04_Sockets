@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016. David de Andrés and Juan Carlos Ruiz, DISCA - UPV, Development of apps for mobile devices.
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/etClientSocketAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textUri|number"
+        android:hint="@string/exchange_images_address_hint">
+
+        <requestFocus />
+    </EditText>
+
+    <ImageView
+        android:id="@+id/ivClientSocketImage"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="1"
+        android:contentDescription="@string/gallery_button"
+        android:onClick="selectImage"
+        android:src="@android:drawable/ic_menu_gallery" />
+
+    <Button
+        android:id="@+id/bClientSocketSend"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="sendImage"
+        android:text="@string/exchange_images_send" />
+
+</LinearLayout>
