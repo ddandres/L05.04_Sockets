@@ -13,9 +13,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
-/**
- * Created by ddandres on 26/02/2016.
- */
 public class ImageUtils {
 
     public static final int GET_IMAGE_FROM_FILE = 0;

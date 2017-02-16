@@ -34,16 +34,16 @@ public class ServerTask extends AsyncTask<Void, Integer, Void> {
     private static final int DISPLAY_SERVER_ERROR = 3;
 
     // Hold reference to the ServerSocket (Server device)
-    ServerSocket server;
+    private ServerSocket server;
     // Hold reference to the Bitmap object to display on the UI
-    Bitmap bitmap;
+    private Bitmap bitmap;
 
     public ServerSocket getServer() {
         return server;
     }
 
     // Hold reference to its parent activity
-    SocketActivity parent;
+    private SocketActivity parent;
 
     public void setParent(SocketActivity parent) {
         this.parent = parent;

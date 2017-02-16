@@ -26,7 +26,7 @@ import labs.sdm.l0504_sockets.activities.SocketActivity;
 public class ClientTask extends AsyncTask<Object, Void, Boolean> {
 
     // Hold reference to its parent activity
-    SocketActivity parent;
+    private SocketActivity parent;
 
     public void setParent(SocketActivity parent) {
         this.parent = parent;
