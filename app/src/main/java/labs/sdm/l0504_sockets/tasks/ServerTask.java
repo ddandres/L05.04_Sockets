@@ -12,6 +12,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -43,10 +45,10 @@ public class ServerTask extends AsyncTask<Void, Integer, Void> {
     }
 
     // Hold reference to its parent activity
-    private SocketActivity parent;
+    private WeakReference<SocketActivity> activity;
 
-    public void setParent(SocketActivity parent) {
-        this.parent = parent;
+    public void setParent(SocketActivity activity) {
+        this.activity = new WeakReference<>(activity);
     }
 
     /*
@@ -59,7 +61,7 @@ public class ServerTask extends AsyncTask<Void, Integer, Void> {
         Socket socket;
         try {
             // Bound a new ServerSocket to a given port
-            server = new ServerSocket(parent.getResources().getInteger(R.integer.port_number));
+            server = new ServerSocket(this.activity.get().getResources().getInteger(R.integer.port_number));
 
             // Keep accepting new clients until the task is cancelled by the user
             while (!isCancelled()) {
@@ -77,7 +79,7 @@ public class ServerTask extends AsyncTask<Void, Integer, Void> {
                 socket.close();
 
                 // Sample the received image
-                bitmap = ImageUtils.sampleImage(parent, ImageUtils.GET_IMAGE_FROM_FILE, "file_received.png");
+                bitmap = ImageUtils.sampleImage(this.activity.get(), ImageUtils.GET_IMAGE_FROM_FILE, "file_received.png");
                 // Display the image on the UI
                 publishProgress(DISPLAY_IMAGE);
             }
@@ -101,7 +103,7 @@ public class ServerTask extends AsyncTask<Void, Integer, Void> {
             // Get the input channel
             InputStream is = socket.getInputStream();
             // Get an output channel on internal storage
-            FileOutputStream fos = parent.openFileOutput("file_received.png", Context.MODE_PRIVATE);
+            FileOutputStream fos = this.activity.get().openFileOutput("file_received.png", Context.MODE_PRIVATE);
             // Read and write the incoming image in chunks of 1024 bytes
             byte[] buffer = new byte[1024];
             int count;
@@ -129,22 +131,22 @@ public class ServerTask extends AsyncTask<Void, Integer, Void> {
 
             // ServerSocket up and running
             case DISPLAY_SERVER_DATA_AND_RUNNING:
-                parent.notifyServerRunning();
+                this.activity.get().notifyServerRunning();
                 break;
 
             // New client accepted
             case DISPLAY_NEW_CLIENT:
-                parent.notifyNewClient();
+                this.activity.get().notifyNewClient();
                 break;
 
             // Image received
             case DISPLAY_IMAGE:
-                parent.displayReceivedImage(bitmap);
+                this.activity.get().displayReceivedImage(bitmap);
                 break;
 
             // Some error occurred during the connection
             case DISPLAY_SERVER_ERROR:
-                parent.displayNotifications(SocketActivity.SERVER_ERROR);
+                this.activity.get().displayNotifications(SocketActivity.SERVER_ERROR);
                 break;
         }
     }
@@ -155,7 +157,7 @@ public class ServerTask extends AsyncTask<Void, Integer, Void> {
     @Override
     protected void onPostExecute(Void result) {
         // Notifies the user that the Server is down
-        parent.displayNotifications(SocketActivity.SERVER_DOWN);
+        this.activity.get().displayNotifications(SocketActivity.SERVER_DOWN);
     }
 
     /*
@@ -164,7 +166,7 @@ public class ServerTask extends AsyncTask<Void, Integer, Void> {
     @Override
     protected void onCancelled() {
         // Notifies the user that the Server is down
-        parent.displayNotifications(SocketActivity.SERVER_DOWN);
+        this.activity.get().displayNotifications(SocketActivity.SERVER_DOWN);
     }
 
 }

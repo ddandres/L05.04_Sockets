@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.ref.WeakReference;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -25,11 +26,10 @@ import labs.sdm.l0504_sockets.activities.SocketActivity;
 * */
 public class ClientTask extends AsyncTask<Object, Void, Boolean> {
 
-    // Hold reference to its parent activity
-    private SocketActivity parent;
+    private WeakReference<SocketActivity> activity;
 
-    public void setParent(SocketActivity parent) {
-        this.parent = parent;
+    public void setParent(SocketActivity activity) {
+        this.activity = new WeakReference<>(activity);
     }
 
     /*
@@ -37,7 +37,7 @@ public class ClientTask extends AsyncTask<Object, Void, Boolean> {
     * */
     @Override
     protected void onPreExecute() {
-        parent.displayNotifications(SocketActivity.SENDING_IMAGE);
+        this.activity.get().displayNotifications(SocketActivity.SENDING_IMAGE);
     }
 
     /*
@@ -51,13 +51,13 @@ public class ClientTask extends AsyncTask<Object, Void, Boolean> {
             socket.connect(
                     new InetSocketAddress(
                             InetAddress.getByName((String) params[0]),
-                            parent.getResources().getInteger(R.integer.port_number)
+                            this.activity.get().getResources().getInteger(R.integer.port_number)
                     )
             );
             // Get the output channel through the Socket
             OutputStream os = socket.getOutputStream();
             // Get the input channel to image through its URI
-            InputStream is = parent.getContentResolver().openInputStream((Uri) params[1]);
+            InputStream is = this.activity.get().getContentResolver().openInputStream((Uri) params[1]);
             // Read and send the image in chunks of 1024 bytes
             byte[] buffer = new byte[1024];
             int count;
@@ -89,11 +89,11 @@ public class ClientTask extends AsyncTask<Object, Void, Boolean> {
     protected void onPostExecute(Boolean result) {
         // The image was successuflly sent
         if (result) {
-            parent.displayNotifications(SocketActivity.IMAGE_SENT);
+            this.activity.get().displayNotifications(SocketActivity.IMAGE_SENT);
         }
         // There was some problem when transferring the image
         else {
-            parent.displayNotifications(SocketActivity.IMAGE_NOT_SENT);
+            this.activity.get().displayNotifications(SocketActivity.IMAGE_NOT_SENT);
         }
     }
 }

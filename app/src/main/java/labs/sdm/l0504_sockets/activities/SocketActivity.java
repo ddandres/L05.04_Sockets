@@ -58,7 +58,7 @@ public class SocketActivity extends AppCompatActivity {
         setContentView(R.layout.activity_socket);
 
         // Initialize the TabHost
-        TabHost tabHost = (TabHost) findViewById(R.id.thSocket);
+        TabHost tabHost = findViewById(R.id.thSocket);
         tabHost.setup();
 
         // Create the Tab for the Server
@@ -76,10 +76,10 @@ public class SocketActivity extends AppCompatActivity {
         tabHost.addTab(spec);
 
         // Keep reference to View objects
-        tvAddress = (TextView) findViewById(R.id.tvServerSocketAddress);
-        ivServer = (ImageView) findViewById(R.id.ivServerSocketImage);
-        ivClient = (ImageView) findViewById(R.id.ivClientSocketImage);
-        etAddress = (EditText) findViewById(R.id.etClientSocketAddress);
+        tvAddress = findViewById(R.id.tvServerSocketAddress);
+        ivServer = findViewById(R.id.ivServerSocketImage);
+        ivClient = findViewById(R.id.ivClientSocketImage);
+        etAddress = findViewById(R.id.etClientSocketAddress);
     }
 
     /*

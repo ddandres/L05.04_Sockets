@@ -3,7 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/L05.04_Sockets.iml" filepath="$PROJECT_DIR$/L05.04_Sockets.iml" />
+      <module fileurl="file://D:\Docencia\SDM\Test\L05.04_Sockets\L05.04_Sockets.iml" filepath="D:\Docencia\SDM\Test\L05.04_Sockets\L05.04_Sockets.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://D:\Docencia\SDM\Test\L05.04_Sockets\app\app.iml" filepath="D:\Docencia\SDM\Test\L05.04_Sockets\app\app.iml" />
     </modules>
   </component>
 </project>
