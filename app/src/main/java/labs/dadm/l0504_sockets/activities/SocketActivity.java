@@ -2,7 +2,7 @@
  * Copyright (c) 2016. David de Andrés and Juan Carlos Ruiz, DISCA - UPV, Development of apps for mobile devices.
  */
 
-package labs.sdm.l0504_sockets.activities;
+package labs.dadm.l0504_sockets.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -27,17 +27,17 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 
-import labs.sdm.l0504_sockets.R;
-import labs.sdm.l0504_sockets.tasks.ClientTask;
-import labs.sdm.l0504_sockets.tasks.ServerTask;
-import labs.sdm.l0504_sockets.utils.ImageUtils;
+import labs.dadm.l0504_sockets.R;
+import labs.dadm.l0504_sockets.tasks.ClientTask;
+import labs.dadm.l0504_sockets.tasks.ServerTask;
+import labs.dadm.l0504_sockets.utils.ImageUtils;
 
 /*
-* Transfers an image from a Client device to a Server device by means of a socket bound to port 9999.
-* Both devices should be connected to the same network.
-* Check http://developer.android.com/intl/es/tools/devices/emulator.html#connecting
-* to connect different instances of the Android emulator.
-* */
+ * Transfers an image from a Client device to a Server device by means of a socket bound to port 9999.
+ * Both devices should be connected to the same network.
+ * Check http://developer.android.com/intl/es/tools/devices/emulator.html#connecting
+ * to connect different instances of the Android emulator.
+ * */
 public class SocketActivity extends AppCompatActivity {
 
     // Hold reference to the View objects
@@ -83,8 +83,8 @@ public class SocketActivity extends AppCompatActivity {
     }
 
     /*
-    * Determines whether the device has got Internet connection.
-    * */
+     * Determines whether the device has got Internet connection.
+     * */
     private boolean isConnected() {
         // Get a reference to the ConnectivityManager
         ConnectivityManager manager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
@@ -95,8 +95,8 @@ public class SocketActivity extends AppCompatActivity {
     }
 
     /*
-    * Handles the event for the server to start/stop receiving images
-    * */
+     * Handles the event for the server to start/stop receiving images
+     * */
     public void toggleServer(View v) {
         ToggleButton button = (ToggleButton) v;
         // Server was stopped, so start it
@@ -133,8 +133,8 @@ public class SocketActivity extends AppCompatActivity {
 
 
     /*
-    * Gets the IP address of the device
-    * */
+     * Gets the IP address of the device
+     * */
     public String getIpAddress() {
         try {
             // Loop through all the available network interfaces
@@ -157,8 +157,8 @@ public class SocketActivity extends AppCompatActivity {
     }
 
     /*
-    * Launches an implicit Intent to select an image available in the device
-    * */
+     * Launches an implicit Intent to select an image available in the device
+     * */
     public void selectImage(View v) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
@@ -166,8 +166,8 @@ public class SocketActivity extends AppCompatActivity {
     }
 
     /*
-    * Gets the URI associated to the selected image and displays that image on the Client UI
-    * */
+     * Gets the URI associated to the selected image and displays that image on the Client UI
+     * */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Check whether the operation was cancelled
@@ -180,8 +180,8 @@ public class SocketActivity extends AppCompatActivity {
     }
 
     /*
-    * Send the image file from the Client to the Server
-    * */
+     * Send the image file from the Client to the Server
+     * */
     public void sendImage(View v) {
         // Check that something has been entered as Server IP address and an image has been selected
         if ((!etAddress.getText().toString().isEmpty()) && (imageUri != null)) {
@@ -203,8 +203,8 @@ public class SocketActivity extends AppCompatActivity {
     }
 
     /*
-    * Displays the Server IP address and a Toast to notify that the ServerSocket is up and running.
-    * */
+     * Displays the Server IP address and a Toast to notify that the ServerSocket is up and running.
+     * */
     public void notifyServerRunning() {
         tvAddress.setText(String.format(
                 getResources().getString(R.string.exchange_images_address),
@@ -216,8 +216,8 @@ public class SocketActivity extends AppCompatActivity {
     }
 
     /*
-    * Displays the received image on the UI.
-    * */
+     * Displays the received image on the UI.
+     * */
     public void displayReceivedImage(Bitmap bitmap) {
         ivServer.setImageBitmap(bitmap);
     }
@@ -230,8 +230,8 @@ public class SocketActivity extends AppCompatActivity {
     public static final int IMAGE_NOT_SENT = 5;
 
     /*
-    * Displays a Toast to notify the user about different events.
-    * */
+     * Displays a Toast to notify the user about different events.
+     * */
     public void displayNotifications(int notification) {
 
         switch (notification) {

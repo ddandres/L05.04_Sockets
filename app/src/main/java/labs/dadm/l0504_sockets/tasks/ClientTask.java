@@ -2,7 +2,7 @@
  * Copyright (c) 2016. David de Andrés and Juan Carlos Ruiz, DISCA - UPV, Development of apps for mobile devices.
  */
 
-package labs.sdm.l0504_sockets.tasks;
+package labs.dadm.l0504_sockets.tasks;
 
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -16,14 +16,14 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import labs.sdm.l0504_sockets.R;
-import labs.sdm.l0504_sockets.activities.SocketActivity;
+import labs.dadm.l0504_sockets.R;
+import labs.dadm.l0504_sockets.activities.SocketActivity;
 
 /*
-* Sends an image to the Server device on a background thread using a Socket.
-* Incoming parameters are a String representing the IP address of the Server device,
-* and an URI to get access to the selected image.
-* */
+ * Sends an image to the Server device on a background thread using a Socket.
+ * Incoming parameters are a String representing the IP address of the Server device,
+ * and an URI to get access to the selected image.
+ * */
 public class ClientTask extends AsyncTask<Object, Void, Boolean> {
 
     private WeakReference<SocketActivity> activity;
@@ -33,16 +33,16 @@ public class ClientTask extends AsyncTask<Object, Void, Boolean> {
     }
 
     /*
-    * Notifies the user, before starting the background task, that the image is about to be sent.
-    * */
+     * Notifies the user, before starting the background task, that the image is about to be sent.
+     * */
     @Override
     protected void onPreExecute() {
         this.activity.get().displayNotifications(SocketActivity.SENDING_IMAGE);
     }
 
     /*
-    * Creates a Socket to connect to the Server device and sends an image.
-    * */
+     * Creates a Socket to connect to the Server device and sends an image.
+     * */
     @Override
     protected Boolean doInBackground(Object... params) {
         try {
@@ -83,8 +83,8 @@ public class ClientTask extends AsyncTask<Object, Void, Boolean> {
     }
 
     /*
-    * Notifies the user, after the task finishes, the result of the task.
-    * */
+     * Notifies the user, after the task finishes, the result of the task.
+     * */
     @Override
     protected void onPostExecute(Boolean result) {
         // The image was successuflly sent

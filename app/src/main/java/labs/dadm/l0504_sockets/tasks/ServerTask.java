@@ -2,7 +2,7 @@
  * Copyright (c) 2016. David de Andrés and Juan Carlos Ruiz, DISCA - UPV, Development of apps for mobile devices.
  */
 
-package labs.sdm.l0504_sockets.tasks;
+package labs.dadm.l0504_sockets.tasks;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -13,21 +13,20 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import labs.sdm.l0504_sockets.R;
-import labs.sdm.l0504_sockets.activities.SocketActivity;
-import labs.sdm.l0504_sockets.utils.ImageUtils;
+import labs.dadm.l0504_sockets.R;
+import labs.dadm.l0504_sockets.activities.SocketActivity;
+import labs.dadm.l0504_sockets.utils.ImageUtils;
 
 /*
-    * Starts a ServerSocket listening for new Clients on port 9999.
-    * It will update the UI with notifications related to the current state of any connection.
-    * Upon accepting a Client, it will receive, store, and display the transferred image.
-    * It will only accept a Client at a time.
-    * Another AsyncTask/Thread will be required to handle multiple Clients.
-    * */
+ * Starts a ServerSocket listening for new Clients on port 9999.
+ * It will update the UI with notifications related to the current state of any connection.
+ * Upon accepting a Client, it will receive, store, and display the transferred image.
+ * It will only accept a Client at a time.
+ * Another AsyncTask/Thread will be required to handle multiple Clients.
+ * */
 public class ServerTask extends AsyncTask<Void, Integer, Void> {
 
     private static final int DISPLAY_SERVER_DATA_AND_RUNNING = 0;
@@ -52,9 +51,9 @@ public class ServerTask extends AsyncTask<Void, Integer, Void> {
     }
 
     /*
-    * Starts a ServerSocket to accept connections and receive a new image.
-    * It only supports one Client at a time.
-    * */
+     * Starts a ServerSocket to accept connections and receive a new image.
+     * It only supports one Client at a time.
+     * */
     @Override
     protected Void doInBackground(Void... params) {
 
@@ -95,8 +94,8 @@ public class ServerTask extends AsyncTask<Void, Integer, Void> {
     }
 
     /*
-    * Receives the incoming image through the socket and saves it on internal storage.
-    * */
+     * Receives the incoming image through the socket and saves it on internal storage.
+     * */
     private void receiveAndSaveImage(Socket socket) {
 
         try {
@@ -122,8 +121,8 @@ public class ServerTask extends AsyncTask<Void, Integer, Void> {
     }
 
     /*
-    * Updates the UI as the state of the Server changes
-    * */
+     * Updates the UI as the state of the Server changes
+     * */
     @Override
     protected void onProgressUpdate(Integer... values) {
 
@@ -152,8 +151,8 @@ public class ServerTask extends AsyncTask<Void, Integer, Void> {
     }
 
     /*
-    * Updates the UI when the task finishes
-    * */
+     * Updates the UI when the task finishes
+     * */
     @Override
     protected void onPostExecute(Void result) {
         // Notifies the user that the Server is down
@@ -161,8 +160,8 @@ public class ServerTask extends AsyncTask<Void, Integer, Void> {
     }
 
     /*
-    * Updates the UI when the task finishes in case it was cancelled
-    * */
+     * Updates the UI when the task finishes in case it was cancelled
+     * */
     @Override
     protected void onCancelled() {
         // Notifies the user that the Server is down

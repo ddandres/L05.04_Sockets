@@ -2,7 +2,7 @@
  * Copyright (c) 2016. David de Andrés and Juan Carlos Ruiz, DISCA - UPV, Development of apps for mobile devices.
  */
 
-package labs.sdm.l0504_sockets.utils;
+package labs.dadm.l0504_sockets.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
