@@ -8,8 +8,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
@@ -85,13 +88,26 @@ public class SocketActivity extends AppCompatActivity {
     /*
      * Determines whether the device has got Internet connection.
      * */
-    private boolean isConnected() {
+    public boolean isConnected() {
+        boolean result = false;
+
         // Get a reference to the ConnectivityManager
         ConnectivityManager manager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         // Get information about the default active data network
-        NetworkInfo info = manager.getActiveNetworkInfo();
-        // There will be connectivity when there is a default connected network
-        return ((info != null) && info.isConnected());
+        if (Build.VERSION.SDK_INT > 22) {
+            final Network activeNetwork = manager.getActiveNetwork();
+            if (activeNetwork != null) {
+                final NetworkCapabilities networkCapabilities = manager.getNetworkCapabilities(activeNetwork);
+                result = networkCapabilities != null && (
+                        networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+                                networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI));
+            }
+        } else {
+            NetworkInfo info = manager.getActiveNetworkInfo();
+            result = ((info != null) && (info.isConnected()));
+        }
+
+        return result;
     }
 
     /*
