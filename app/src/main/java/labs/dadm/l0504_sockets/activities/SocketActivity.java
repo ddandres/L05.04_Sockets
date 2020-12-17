@@ -14,7 +14,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -22,6 +21,8 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.IOException;
 import java.net.Inet4Address;
@@ -31,8 +32,8 @@ import java.net.SocketException;
 import java.util.Enumeration;
 
 import labs.dadm.l0504_sockets.R;
-import labs.dadm.l0504_sockets.tasks.ClientTask;
-import labs.dadm.l0504_sockets.tasks.ServerTask;
+import labs.dadm.l0504_sockets.threads.ClientThread;
+import labs.dadm.l0504_sockets.threads.ServerThread;
 import labs.dadm.l0504_sockets.utils.ImageUtils;
 
 /*
@@ -49,8 +50,8 @@ public class SocketActivity extends AppCompatActivity {
     ImageView ivClient;
     EditText etAddress;
 
-    // Hold reference to the asynchronous task in charge of managing the Server
-    ServerTask task;
+    // Hold reference to the thread in charge of managing the Server
+    ServerThread serverThread;
 
     // Hold reference to the URI identifying the location of the image to be sent
     Uri imageUri;
@@ -120,9 +121,8 @@ public class SocketActivity extends AppCompatActivity {
             // Check that network connectivity exists
             if (isConnected()) {
                 // Launch the AsyncTask in charge of starting the Server
-                task = new ServerTask();
-                task.setParent(this);
-                task.execute();
+                serverThread = new ServerThread(this);
+                serverThread.start();
             }
             // Notify the user that the device has not got Internet connection
             else {
@@ -134,12 +134,12 @@ public class SocketActivity extends AppCompatActivity {
         // Server was up and running, so stop it
         else {
             // Cancel the task for the server to stop
-            task.cancel(true);
+            serverThread.cancel();
             try {
                 // Close the ServerSocket if it is active, as it could be blocked waiting
                 // for new clients and will not stop just by cancelling the task
-                if (task.getServer().isBound()) {
-                    task.getServer().close();
+                if (serverThread.getServer().isBound()) {
+                    serverThread.getServer().close();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -154,11 +154,11 @@ public class SocketActivity extends AppCompatActivity {
     public String getIpAddress() {
         try {
             // Loop through all the available network interfaces
-            for (Enumeration en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
+            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
 
                 NetworkInterface networkInterface = (NetworkInterface) en.nextElement();
                 // Loop through all the network addresses bound to that particular interface
-                for (Enumeration enumIpAddr = networkInterface.getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
+                for (Enumeration<InetAddress> enumIpAddr = networkInterface.getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
                     // Return the first IPv4 address that it is not the loopback address
                     InetAddress inetAddress = (InetAddress) enumIpAddr.nextElement();
                     if (!inetAddress.isLoopbackAddress() && inetAddress instanceof Inet4Address) {
@@ -205,9 +205,8 @@ public class SocketActivity extends AppCompatActivity {
             // Check that network connectivity exists
             if (isConnected()) {
                 // Launch the AsyncTask in charge of sending the image file
-                ClientTask client = new ClientTask();
-                client.setParent(this);
-                client.execute(etAddress.getText().toString(), imageUri);
+                ClientThread client = new ClientThread(this, etAddress.getText().toString(), imageUri);
+                client.start();
             } else {
                 // Notify the user that the device has not got Internet connection
                 Toast.makeText(this, R.string.not_connected, Toast.LENGTH_SHORT).show();

@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/L05.04_Sockets.iml" filepath="$PROJECT_DIR$/L05.04_Sockets.iml" group="L05.04_Sockets" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="L05.04_Sockets/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/L05.04_Sockets.iml" filepath="$PROJECT_DIR$/.idea/modules/L05.04_Sockets.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/L05.04_Sockets.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/L05.04_Sockets.app.iml" />
     </modules>
   </component>
 </project>

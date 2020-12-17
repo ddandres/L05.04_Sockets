@@ -72,7 +72,7 @@ public class ImageUtils {
                     is = context.openFileInput((String) value);
                 }
                 // Get the image selected by the Client again from its URI
-                else if (source == GET_IMAGE_FROM_URI){
+                else {
                     is = context.getContentResolver().openInputStream((Uri) value);
                 }
                 // Decode de InputStream into a bitmap
