@@ -38,7 +38,8 @@ public class ClientThread extends Thread {
 
         // Notifies the user, before starting the background task, that the image is about to be sent
         if (reference.get() != null) {
-            reference.get().runOnUiThread(() -> reference.get().displayNotifications(SocketActivity.SENDING_IMAGE));
+            reference.get().runOnUiThread(
+                    () -> reference.get().displayNotifications(SocketActivity.SENDING_IMAGE));
         }
 
         // Creates a Socket to connect to the Server device and sends an image.
@@ -86,11 +87,13 @@ public class ClientThread extends Thread {
         if (reference.get() != null) {
             if (imageSent) {
                 // The image was successuflly sent
-                reference.get().runOnUiThread(() -> reference.get().displayNotifications(SocketActivity.IMAGE_SENT));
+                reference.get().runOnUiThread(
+                        () -> reference.get().displayNotifications(SocketActivity.IMAGE_SENT));
 
             } else {
                 // There was some problem when transferring the image
-                reference.get().runOnUiThread(() -> reference.get().displayNotifications(SocketActivity.IMAGE_NOT_SENT));
+                reference.get().runOnUiThread(
+                        () -> reference.get().displayNotifications(SocketActivity.IMAGE_NOT_SENT));
             }
         }
     }

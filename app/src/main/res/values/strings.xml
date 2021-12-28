@@ -17,5 +17,6 @@
     <string name="not_data">"You should introduce the IP address of the Server and select and image to transfer"</string>
     <string name="image_not_sent">"The image could not be sent to the Server"</string>
     <string name="image_sent">"The image was successfully sent"</string>
-    <string name="sending_image">"Sending image..."</string>
+    <string name="sending_image">"Sending image…"</string>
+    <string name="received_image">"Received image"</string>
 </resources>

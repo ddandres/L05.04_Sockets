@@ -21,11 +21,6 @@ import labs.dadm.l0504_sockets.utils.ImageUtils;
 
 public class ServerThread extends Thread {
 
-    private static final int DISPLAY_SERVER_DATA_AND_RUNNING = 0;
-    private static final int DISPLAY_NEW_CLIENT = 1;
-    private static final int DISPLAY_IMAGE = 2;
-    private static final int DISPLAY_SERVER_ERROR = 3;
-
     // Hold reference to the ServerSocket (Server device)
     private ServerSocket server;
     // Hold reference to the Bitmap object to display on the UI
@@ -49,14 +44,11 @@ public class ServerThread extends Thread {
         this.cancelled = true;
     }
 
-    /*
-     * Starts a ServerSocket to accept connections and receive a new image.
-     * It only supports one Client at a time.
-     * */
+    // Starts a ServerSocket to accept connections and receive a new image.
+    // It only supports one Client at a time.
     @Override
     public void run() {
         Socket socket;
-        SocketActivity activity;
 
         cancelled = false;
 
@@ -78,7 +70,8 @@ public class ServerThread extends Thread {
 
                     // Notify a new Client has been accepted
                     if (reference.get() != null) {
-                        reference.get().runOnUiThread(() -> reference.get().notifyNewClient());
+                        reference.get().runOnUiThread(
+                                () -> reference.get().displayNotifications(SocketActivity.NEW_CLIENT));
                     }
 
                     // Get the incoming image and save it on internal storage
@@ -88,11 +81,13 @@ public class ServerThread extends Thread {
 
                     // Sample the received image
                     if (reference.get() != null) {
-                        bitmap = ImageUtils.sampleImage(reference.get(), ImageUtils.GET_IMAGE_FROM_FILE, "file_received.png");
+                        bitmap = ImageUtils.sampleImage(
+                                reference.get(), ImageUtils.GET_IMAGE_FROM_FILE, "file_received.png");
                     }
                     // Display the image on the UI
                     if (reference.get() != null) {
-                        reference.get().runOnUiThread(() -> reference.get().displayReceivedImage(bitmap));
+                        reference.get().runOnUiThread(
+                                () -> reference.get().displayReceivedImage(bitmap));
                     }
                 }
             } catch (IOException e) {
@@ -101,7 +96,8 @@ public class ServerThread extends Thread {
                 // Otherwise display a notification to the user
                 if (cancelled) {
                     if (reference.get() != null) {
-                        reference.get().runOnUiThread(() -> reference.get().displayNotifications(SocketActivity.SERVER_ERROR));
+                        reference.get().runOnUiThread(
+                                () -> reference.get().displayNotifications(SocketActivity.SERVER_ERROR));
                     }
                 }
             }
@@ -109,13 +105,12 @@ public class ServerThread extends Thread {
 
         // Updates the UI when the task finishes or it is cancelled
         if (reference.get() != null) {
-            reference.get().runOnUiThread(() -> reference.get().displayNotifications(SocketActivity.SERVER_DOWN));
+            reference.get().runOnUiThread(
+                    () -> reference.get().displayNotifications(SocketActivity.SERVER_DOWN));
         }
     }
 
-    /*
-     * Receives the incoming image through the socket and saves it on internal storage.
-     * */
+    // Receives the incoming image through the socket and saves it on internal storage.
     private void receiveAndSaveImage(Socket socket) {
 
         try {
@@ -123,7 +118,8 @@ public class ServerThread extends Thread {
             InputStream is = socket.getInputStream();
             if (reference.get() != null) {
                 // Get an output channel on internal storage
-                FileOutputStream fos = reference.get().openFileOutput("file_received.png", Context.MODE_PRIVATE);
+                FileOutputStream fos =
+                        reference.get().openFileOutput("file_received.png", Context.MODE_PRIVATE);
                 // Read and write the incoming image in chunks of 1024 bytes
                 byte[] buffer = new byte[1024];
                 int count;

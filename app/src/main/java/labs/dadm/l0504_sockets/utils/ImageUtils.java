@@ -18,9 +18,7 @@ public class ImageUtils {
     public static final int GET_IMAGE_FROM_FILE = 0;
     public static final int GET_IMAGE_FROM_URI = 1;
 
-    /*
-    * Samples an image to reduce its size before displaying it on screen.
-    * */
+    // Samples an image to reduce its size before displaying it on screen.
     public static Bitmap sampleImage(Context context, int source, Object value) {
 
         Bitmap bitmap = null;
@@ -31,14 +29,12 @@ public class ImageUtils {
                 is = context.openFileInput((String) value);
             }
             // Get the image selected by the Client from its URI
-            else if (source == GET_IMAGE_FROM_URI){
+            else if (source == GET_IMAGE_FROM_URI) {
                 is = context.getContentResolver().openInputStream((Uri) value);
             }
-            /*
-                The image will be sampled in two steps:
-                 - The fist one gets the image size
-                 - The next one does the actual sampling
-            */
+            // The image will be sampled in two steps:
+            // - First: get the image size
+            // - Then: do the actual sampling
             if (is != null) {
                 // Specify the options for sampling the image
                 BitmapFactory.Options options = new BitmapFactory.Options();

@@ -14,7 +14,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TabHost;
@@ -22,6 +21,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.IOException;
@@ -36,12 +37,10 @@ import labs.dadm.l0504_sockets.threads.ClientThread;
 import labs.dadm.l0504_sockets.threads.ServerThread;
 import labs.dadm.l0504_sockets.utils.ImageUtils;
 
-/*
- * Transfers an image from a Client device to a Server device by means of a socket bound to port 9999.
- * Both devices should be connected to the same network.
- * Check http://developer.android.com/intl/es/tools/devices/emulator.html#connecting
- * to connect different instances of the Android emulator.
- * */
+// Transfers an image from a Client device to a Server device by means of a socket bound to port 9999.
+// Both devices should be connected to the same network.
+// Check https://developer.android.com/studio/run/emulator-networking#connecting
+// to connect different instances of the Android emulator.
 public class SocketActivity extends AppCompatActivity {
 
     // Hold reference to the View objects
@@ -49,12 +48,15 @@ public class SocketActivity extends AppCompatActivity {
     ImageView ivServer;
     ImageView ivClient;
     EditText etAddress;
+    ToggleButton bToggle;
 
     // Hold reference to the thread in charge of managing the Server
     ServerThread serverThread;
 
     // Hold reference to the URI identifying the location of the image to be sent
     Uri imageUri;
+
+    ActivityResultLauncher<Intent> launcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,12 +86,34 @@ public class SocketActivity extends AppCompatActivity {
         ivServer = findViewById(R.id.ivServerSocketImage);
         ivClient = findViewById(R.id.ivClientSocketImage);
         etAddress = findViewById(R.id.etClientSocketAddress);
+
+        bToggle = findViewById(R.id.togServerSocket);
+        bToggle.setOnClickListener(v -> toggleServer());
+
+        findViewById(R.id.ivClientSocketImage).setOnClickListener(v -> selectImage());
+        findViewById(R.id.bClientSocketSend).setOnClickListener(v -> sendImage());
+
+        // Gets the URI associated to the selected image and displays that image on the Client UI
+        launcher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    // Check whether the operation was cancelled
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        // Get the URI of the selected image
+                        if (result.getData() != null) {
+                            imageUri = result.getData().getData();
+                            // Sample the image and display on the Client UI
+                            ivClient.setImageBitmap(
+                                    ImageUtils.sampleImage(SocketActivity.this,
+                                            ImageUtils.GET_IMAGE_FROM_URI, imageUri));
+                        }
+                    }
+                }
+        );
     }
 
-    /*
-     * Determines whether the device has got Internet connection.
-     * */
-    public boolean isConnected() {
+    // Determines whether the device has got Internet connection.
+    private boolean isConnected() {
         boolean result = false;
 
         // Get a reference to the ConnectivityManager
@@ -111,13 +135,10 @@ public class SocketActivity extends AppCompatActivity {
         return result;
     }
 
-    /*
-     * Handles the event for the server to start/stop receiving images
-     * */
-    public void toggleServer(View v) {
-        ToggleButton button = (ToggleButton) v;
+    // Handles the event for the server to start/stop receiving images
+    private void toggleServer() {
         // Server was stopped, so start it
-        if (button.isChecked()) {
+        if (bToggle.isChecked()) {
             // Check that network connectivity exists
             if (isConnected()) {
                 // Launch the AsyncTask in charge of starting the Server
@@ -128,7 +149,7 @@ public class SocketActivity extends AppCompatActivity {
             else {
                 Toast.makeText(this, R.string.not_connected, Toast.LENGTH_SHORT).show();
                 // Uncheck the button as the Server is not running
-                button.setChecked(false);
+                bToggle.setChecked(false);
             }
         }
         // Server was up and running, so stop it
@@ -147,11 +168,8 @@ public class SocketActivity extends AppCompatActivity {
         }
     }
 
-
-    /*
-     * Gets the IP address of the device
-     * */
-    public String getIpAddress() {
+    // Gets the IP address of the device
+    private String getIpAddress() {
         try {
             // Loop through all the available network interfaces
             for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
@@ -172,34 +190,15 @@ public class SocketActivity extends AppCompatActivity {
         return null;
     }
 
-    /*
-     * Launches an implicit Intent to select an image available in the device
-     * */
-    public void selectImage(View v) {
+    // Launches an implicit Intent to select an image available in the device
+    private void selectImage() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
-        startActivityForResult(intent, 0);
+        launcher.launch(intent);
     }
 
-    /*
-     * Gets the URI associated to the selected image and displays that image on the Client UI
-     * */
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        // Check whether the operation was cancelled
-        if (resultCode == Activity.RESULT_OK) {
-            // Get the URI of the selected image
-            imageUri = data.getData();
-            // Sample the image and display on the Client UI
-            ivClient.setImageBitmap(ImageUtils.sampleImage(this, ImageUtils.GET_IMAGE_FROM_URI, imageUri));
-        }
-    }
-
-    /*
-     * Send the image file from the Client to the Server
-     * */
-    public void sendImage(View v) {
+    // Send the image file from the Client to the Server
+    private void sendImage() {
         // Check that something has been entered as Server IP address and an image has been selected
         if ((!etAddress.getText().toString().isEmpty()) && (imageUri != null)) {
             // Check that network connectivity exists
@@ -218,9 +217,7 @@ public class SocketActivity extends AppCompatActivity {
         }
     }
 
-    /*
-     * Displays the Server IP address and a Toast to notify that the ServerSocket is up and running.
-     * */
+    // Displays the Server IP address and a Toast to notify that the ServerSocket is up and running.
     public void notifyServerRunning() {
         tvAddress.setText(String.format(
                 getResources().getString(R.string.exchange_images_address),
@@ -228,12 +225,7 @@ public class SocketActivity extends AppCompatActivity {
         Toast.makeText(this, R.string.message_server_on, Toast.LENGTH_SHORT).show();
     }
 
-    public void notifyNewClient() {
-    }
-
-    /*
-     * Displays the received image on the UI.
-     * */
+    // Displays the received image on the UI.
     public void displayReceivedImage(Bitmap bitmap) {
         ivServer.setImageBitmap(bitmap);
     }
@@ -245,9 +237,7 @@ public class SocketActivity extends AppCompatActivity {
     public static final int IMAGE_SENT = 4;
     public static final int IMAGE_NOT_SENT = 5;
 
-    /*
-     * Displays a Toast to notify the user about different events.
-     * */
+    // Displays a Toast to notify the user about different events.
     public void displayNotifications(int notification) {
 
         switch (notification) {
